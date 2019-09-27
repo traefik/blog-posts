@@ -1,0 +1,47 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.0.0"
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker
+      - --api
+      - --certificatesresolvers.leresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.leresolver.acme.email=your@email.com
+      - --certificatesresolvers.leresolver.acme.storage=/acme.json
+      - --certificatesresolvers.leresolver.acme.tlschallenge=true
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./acme.json:/acme.json"
+    labels:
+      # global redirect to https
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+      # middleware redirect
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  my-app:
+    image: containous/whoami:v1.3.0
+    labels:
+      - "traefik.http.routers.my-app.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.my-app.middlewares=auth"
+      - "traefik.http.routers.my-app.entrypoints=websecure"
+      - "traefik.http.routers.my-app.tls=true"
+      - "traefik.http.routers.my-app.tls.certresolver=leresolver"
+      - "traefik.http.middlewares.auth.basicauth.users=user:$$apr1$$q8eZFHjF$$Fvmkk//V6Btlaf2i/ju5n/" # user/password
+
+# Dashboard (https://localhost:8080)
+# Route
+# Basic auth (login: user | password: password)
+# Let's Encrypt (https://whoami.docker.localhost/)
+# Global HTTP to HTTPS redirection (http://whoami.docker.localhost/)
+
+# touch acme.json; chmod 600 acme.json

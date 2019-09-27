@@ -1,0 +1,19 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.0.1"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  my-app:
+    image: containous/whoami:v1.3.0
+
+# Dashboard (https://localhost:8080)

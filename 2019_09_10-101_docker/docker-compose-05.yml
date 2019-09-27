@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  traefik:
+    image: "traefik:v2.0.1"
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  my-app:
+    image: containous/whoami:v1.3.0
+    labels:
+      - "traefik.http.routers.my-app.rule=Host(`whoami.docker.localhost`)"
+      - "traefik.http.routers.my-app.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=user:$$apr1$$q8eZFHjF$$Fvmkk//V6Btlaf2i/ju5n/" # user/password
+
+# Dashboard (https://localhost:8080)
+# Route (http://whoami.docker.localhost/)
+# Basic auth (login: user | password: password)
