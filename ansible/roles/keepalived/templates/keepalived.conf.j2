@@ -1,0 +1,47 @@
+global_defs {
+        script_user nobody
+        enable_script_security
+}
+
+vrrp_script check_traefik {
+  script       "/usr/bin/curl --fail http://127.0.0.1"
+  interval 1   # check every 2 seconds
+  fall 2       # require 2 failures for KO
+  rise 2       # require 2 successes for OK
+}
+
+{% if role == "master" %}
+vrrp_instance VI_traefik {
+        state MASTER
+        interface {{ansible_default_ipv4["interface"]}}
+        virtual_router_id 42
+        priority 255
+        advert_int 1
+        authentication {
+              auth_type AH
+              auth_pass {{keepalived_pass}}
+        }
+        virtual_ipaddress {
+              {{keepalived_vip}}
+        }
+
+        track_script {
+               check_traefik
+        }
+}
+{% else %}
+vrrp_instance VI_traefik {
+        state BACKUP
+        interface {{ansible_default_ipv4["interface"]}}
+        virtual_router_id 42
+        priority 254
+        advert_int 1
+        authentication {
+              auth_type AH
+              auth_pass {{keepalived_pass}}
+        }
+        virtual_ipaddress {
+              {{keepalived_vip}}
+        }
+}
+{% endif %}

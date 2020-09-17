@@ -1,0 +1,11 @@
+- name: Configure traefik
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/traefik/{{item}}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - traefik.toml
+    - dynamic_conf.toml
+  notify: Restart traefik

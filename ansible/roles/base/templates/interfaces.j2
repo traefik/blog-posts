@@ -1,0 +1,17 @@
+# MANAGED BY ANSIBLE
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto {{ansible_default_ipv4['interface']}}
+iface {{ansible_default_ipv4['interface']}} inet static
+	address {{host_ip}}
+	netmask 255.255.255.0
+	network 192.168.1.0
+	broadcast 192.168.1.255
+	gateway 192.168.1.254
+	# dns-* options are implemented by the resolvconf package, if installed
+	dns-nameservers 192.168.1.254
+        dns-search traefik.local

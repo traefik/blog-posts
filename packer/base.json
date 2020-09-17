@@ -1,0 +1,51 @@
+{
+  "variables": {
+    "login": "root",
+    "password": "{{env `ROOT_PASSWORD`}}",
+    "sshkey": "{{env `SSH_PUB_KEY`}}"
+  },
+  "builders": [
+    {
+      "accelerator": "kvm",
+      "boot_command": [
+        "<down><down><enter><down><down><down><down><down><down><tab> preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian10.txt auto-install/enable=true DEBCONF_DEBUG=5<enter><wait>"
+      ],
+      "boot_wait": "5s",
+      "disk_interface": "virtio",
+      "disk_size": "30720M",
+      "format": "qcow2",
+      "http_directory": "./preseed/",
+      "iso_checksum": "file:https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/SHA256SUMS",
+      "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.5.0-amd64-netinst.iso",
+      "memory": 1024,
+      "net_device": "virtio-net",
+      "output_directory": "output",
+      "qemuargs": [
+        [
+          "-display",
+          "gtk"
+        ]
+      ],
+      "shutdown_command": "shutdown -P now",
+      "ssh_password": "{{ user `password` }}",
+      "ssh_timeout": "20m",
+      "ssh_username": "{{ user `login` }}",
+      "type": "qemu",
+      "vm_name": "debian10"
+    }
+  ],
+  "provisioners": [
+    {
+      "inline": [
+        "lvremove -f vg_00/lv_empty00",
+        "mkdir /root/.ssh",
+        "echo \"{{ user `sshkey` }}\" > /root/.ssh/authorized_keys",
+        "sed -e '/^PasswordAuthentication yes/d' -e '/^PermitRootLogin yes/d' -i /etc/ssh/sshd_config",
+        "echo 'WantedBy=dev-virtio\\x2dports-org.qemu.guest_agent.0.device' >> /lib/systemd/system/qemu-guest-agent.service",
+        "systemctl daemon-reload",
+        "systemctl enable qemu-guest-agent.service"
+      ],
+      "type": "shell"
+    }
+  ]
+}

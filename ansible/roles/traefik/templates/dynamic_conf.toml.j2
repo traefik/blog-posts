@@ -1,0 +1,9 @@
+[http.routers]
+    [http.routers.my-hostname-router]
+        rule = "Path(`/`)"
+        service = "my-hostname-service"
+
+[http.services]
+    [http.services.my-hostname-service.loadBalancer]
+        [[http.services.my-hostname-service.loadBalancer.servers]]
+            url = "http://127.0.0.1:8888/"

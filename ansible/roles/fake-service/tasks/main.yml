@@ -1,0 +1,19 @@
+- name: Install systemd xinetd like service
+  copy:
+    src: "{{item }}"
+    dest: "/etc/systemd/system/{{item}}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - hostname.socket
+    - hostname@.service
+  notify:
+    - Reload systemd
+    - Restart fake-service
+
+- name: Start the fake-service
+  systemd:
+    state: started
+    daemon_reload: yes
+    name: hostname.socket

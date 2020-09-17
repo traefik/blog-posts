@@ -1,0 +1,18 @@
+- hosts: all
+  roles:
+    - role: base
+  tags:
+    - base
+
+- hosts: all
+  roles:
+    - role: traefik
+    - role: fake-service
+  tags:
+    - traefik
+
+- hosts: keepalived
+  roles:
+    - role: keepalived
+  tags:
+    - keepalived

@@ -1,0 +1,8 @@
+[Unit]
+Description=hostname connection handler
+
+[Service]
+ExecStart=/bin/bash -c "echo -e \"HTTP/1.0 200 OK\nContent-Type: text/plain\nContent-Length: $(/usr/bin/hostname | wc -c)\n\n$(/usr/bin/hostname)\"; sleep 0.5"
+User=www-data
+Group=www-data
+StandardInput=socket
