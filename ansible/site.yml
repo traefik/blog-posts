@@ -4,15 +4,40 @@
   tags:
     - base
 
-- hosts: all
+- hosts: traefik
   roles:
     - role: traefik
-    - role: fake-service
   tags:
     - traefik
+
+- hosts: fake-service
+  roles:
+    - role: fake-service
+  tags:
+    - fake-service
 
 - hosts: keepalived
   roles:
     - role: keepalived
   tags:
     - keepalived
+
+- hosts: kubernetes
+  roles:
+    - role: kubernetes
+      when: role == "server"
+  tags:
+    - kubernetes
+
+- hosts: kubernetes
+  roles:
+    - role: kubernetes
+      when: role == "agent"
+  tags:
+    - kubernetes
+
+- hosts: localhost
+  roles:
+    - role: kubernetes-config
+  tags:
+    - kubernetes-config

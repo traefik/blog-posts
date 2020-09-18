@@ -14,7 +14,7 @@ vrrp_script check_traefik {
 vrrp_instance VI_traefik {
         state MASTER
         interface {{ansible_default_ipv4["interface"]}}
-        virtual_router_id 42
+        virtual_router_id {{keepalived_router_id}}
         priority 255
         advert_int 1
         authentication {
@@ -25,15 +25,17 @@ vrrp_instance VI_traefik {
               {{keepalived_vip}}
         }
 
+{% if keepalived_check is defined %}
         track_script {
-               check_traefik
+               {{keepalived_check}}
         }
+{% endif %}
 }
 {% else %}
 vrrp_instance VI_traefik {
         state BACKUP
         interface {{ansible_default_ipv4["interface"]}}
-        virtual_router_id 42
+        virtual_router_id {{keepalived_router_id}}
         priority 254
         advert_int 1
         authentication {

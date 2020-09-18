@@ -1,0 +1,14 @@
+- name: Download k3s
+  get_url:
+    url: "https://github.com/rancher/k3s/releases/download/{{k3s_version}}/k3s"
+    dest: /usr/local/bin/k3s
+    mode: '0755'
+
+- name: Install systemd unit file
+  template:
+    src: k3s.service.j2
+    dest: "/etc/systemd/system/k3s-{{role}}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "Restart k3s-{{role}}"

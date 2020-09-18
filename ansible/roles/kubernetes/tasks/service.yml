@@ -1,0 +1,4 @@
+- name: Start k3s
+  systemd:
+    name: "k3s-{{role}}"
+    state: started

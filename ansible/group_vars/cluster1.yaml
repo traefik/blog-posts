@@ -1,0 +1,5 @@
+keepalived_pass: "tr@3fiK1"
+keepalived_vip: "192.168.1.60/24"
+keepalived_router_id: 42
+keepalived_check: "check_traefik"
+backends: "http://127.0.0.1:8888/"
