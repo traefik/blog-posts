@@ -4,8 +4,8 @@ global_defs {
 }
 
 vrrp_script check_traefik {
-  script       "/usr/bin/curl --fail http://127.0.0.1:8080/"
-  interval 1   # check every 2 seconds
+  script       "/usr/bin/curl --fail http://127.0.0.1:8080/ -t 1"
+  interval 2   # check every 2 seconds
   fall 2       # require 2 failures for KO
   rise 2       # require 2 successes for OK
 }
