@@ -3,6 +3,7 @@
     name:
       - curl
       - python3-pip
+      - python-setuptools
     state: present
 
 - name: Install anycast health checker
