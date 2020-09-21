@@ -39,6 +39,7 @@
 - hosts: localhost
   roles:
     - role: kubernetes-config
+      when: groups['kubernetes']|length > 0
   tags:
     - kubernetes-config
 

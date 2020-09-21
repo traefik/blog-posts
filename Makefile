@@ -10,6 +10,7 @@ LIBVIRT_IMAGES_POOL="templates"
 LIBVIRT_IMAGE_NAME="debian10-traefik.qcow2"
 ROOT_PASSWORD="traefik"
 $(eval SSH_IDENTITY=$(shell find ~/.ssh/ -name 'id_*' -not -name '*.pub' | head -n 1))
+CLUSTER=1
 
 all:
 
@@ -58,7 +59,7 @@ upload-image:
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-upload --pool $(LIBVIRT_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME) packer/output/debian10
 
 create-vms:
-	cd terraform && terraform init && terraform apply -auto-approve -var "libvirt_uri=$(LIBVIRT_HYPERVISOR_URI)" -var "ssh_key=$(SSH_IDENTITY)"
+	cd terraform && terraform init && terraform apply -auto-approve -var "libvirt_uri=$(LIBVIRT_HYPERVISOR_URI)" -var "ssh_key=$(SSH_IDENTITY)" -var-file="cluster$(CLUSTER).tfvars" -state="cluster$(CLUSTER).tfstate"
 
 run-playbook: create-vms
 	cd ansible && ansible-playbook -u root -i traefik_inventory site.yml
