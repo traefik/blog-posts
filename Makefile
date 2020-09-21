@@ -34,7 +34,7 @@ install-terraform:
 	chmod +x $(LOCAL_BIN)terraform
 
 install-ansible:
-	pip3 freeze | grep ansible==$(ANSIBLE_VERSION) || pip3 install ansible
+	pip3 freeze | grep ansible==$(ANSIBLE_VERSION) || pip3 install ansible kubernetes openshift
 
 install-terraform-plugins:
 	test -d $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/ || mkdir -p $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/; \
