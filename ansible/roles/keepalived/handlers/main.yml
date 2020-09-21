@@ -2,4 +2,3 @@
   systemd:
     name: keepalived
     state: restarted
-    daemon_reload: yes

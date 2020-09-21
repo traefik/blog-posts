@@ -1,0 +1,11 @@
+- name: Tune sysctl
+  sysctl:
+    name: '{{item.name}}'
+    value: '{{item.value}}'
+    sysctl_file: /etc/sysctl.d/traefik.conf
+    state: present
+  with_items:
+    - name: net.ipv4.ip_forward
+      value: '1'
+    - name: net.ipv4.fib_multipath_hash_policy
+      value: '1'

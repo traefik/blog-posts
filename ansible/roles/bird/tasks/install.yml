@@ -1,0 +1,5 @@
+- name: Install bird
+  apt:
+    name:
+      - bird
+    state: present

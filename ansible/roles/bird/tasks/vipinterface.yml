@@ -1,0 +1,8 @@
+- name: Add VIP interface
+  template:
+    src: loopback-anycast.j2
+    dest: /etc/network/interfaces.d/lo:traefik
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart networking

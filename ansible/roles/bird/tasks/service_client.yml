@@ -1,0 +1,5 @@
+- name: Start anycast-healthchecker
+  systemd:
+    name: anycast-healthchecker
+    state: started
+    enabled: yes

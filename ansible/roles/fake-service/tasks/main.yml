@@ -17,3 +17,4 @@
     state: started
     daemon_reload: yes
     name: hostname.socket
+    enabled: yes

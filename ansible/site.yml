@@ -41,3 +41,17 @@
     - role: kubernetes-config
   tags:
     - kubernetes-config
+
+- hosts: bird
+  roles:
+    - role: bird
+      when: role == "router"
+  tags:
+    - bird
+
+- hosts: bird
+  roles:
+    - role: bird
+      when: role != "router"
+  tags:
+    - bird

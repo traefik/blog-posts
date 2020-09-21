@@ -1,0 +1,60 @@
+- name: Install pip
+  apt:
+    name:
+      - curl
+      - python3-pip
+    state: present
+
+- name: Install anycast health checker
+  pip:
+    executable: pip3
+    name: "anycast-healthchecker=={{anycast_healthchecker_version}}"
+
+- name: Create needed dir
+  file:
+    path: "{{item}}"
+    owner: bird
+    group: bird
+    mode: '0700'
+    state: directory
+  with_items:
+    - /var/lib/anycast-healthchecker/
+    - /etc/anycast-healthchecker.d
+    - /etc/bird.d
+
+- name: Check anycast-prefixes.conf exists or not
+  stat:
+    path: /var/lib/anycast-healthchecker/anycast-prefixes.conf
+  register: st
+
+- name: Default anycast-prefixes.conf file
+  template:
+    src: anycast-prefixes.conf.j2
+    dest: /var/lib/anycast-healthchecker/anycast-prefixes.conf
+    owner: bird
+    group: bird
+    mode: '0600'
+  when: not st.stat.exists
+
+- name: Create function anycast-vip
+  template:
+    src: anycast-vip.conf.j2
+    dest: /etc/bird.d/anycast-vip.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create symlink
+  file:
+    src: /var/lib/anycast-healthchecker/anycast-prefixes.conf
+    dest: /etc/bird.d/anycast-prefixes.conf
+    state: link
+
+- name: Install systemd unit file
+  template:
+    src: anycast-healthchecker.service.j2
+    dest: /etc/systemd/system/anycast-healthchecker.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart anycast-healthchecker

@@ -1,0 +1,15 @@
+- name: Tune sysctl
+  sysctl:
+    name: '{{item.name}}'
+    value: '{{item.value}}'
+    sysctl_file: /etc/sysctl.d/traefik.conf
+    state: present
+  with_items:
+    - name: net.ipv4.conf.all.arp_ignore
+      value: '1'
+    - name: net.ipv4.conf.all.arp_announce
+      value: '8'
+    - name: net.ipv4.conf.all.rp_filter
+      value: '2'
+    - name: net.ipv4.ip_forward
+      value: '1'

@@ -2,6 +2,7 @@
     [http.routers.router]
         rule = "Path(`/`)"
         service = "service"
+        middlewares = ["LBHeader"]
 
 [http.services]
     [http.services.service.loadBalancer]
@@ -9,3 +10,8 @@
         [[http.services.service.loadBalancer.servers]]
             url = "{{backend}}"
 {% endfor %}
+
+[http.middlewares]
+  [http.middlewares.LBHeader.headers]
+    [http.middlewares.LBHeader.headers.customResponseHeaders]
+        X-Lb-Name = "{{ansible_hostname}}"

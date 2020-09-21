@@ -2,3 +2,4 @@
   systemd:
     name: "k3s-{{role}}"
     state: started
+    enabled: yes

@@ -69,5 +69,36 @@ vms = [
     vars = {
         role = "agent"
     }
+  },
+
+  {
+    name = "router-1"
+    cpu = 1
+    memory = 512
+    ip = "192.168.1.81"
+    groups = ["bird", "cluster3"]
+    vars = {
+        role = "router"
+    }
+  },
+  {
+    name = "traefik-lb5"
+    cpu = 1
+    memory = 512
+    ip = "192.168.1.82"
+    groups = ["bird", "traefik", "cluster3"]
+    vars = {
+        role = "client"
+    }
+  },
+  {
+    name = "traefik-lb6"
+    cpu = 1
+    memory = 512
+    ip = "192.168.1.83"
+    groups = ["bird", "traefik", "cluster3"]
+    vars = {
+         role = "client"
+    }
   }
 ]

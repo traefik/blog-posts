@@ -1,0 +1,3 @@
+local_as: 64512
+anycast_vip: "N/A"
+anycast_healthchecker_version: 0.9.1

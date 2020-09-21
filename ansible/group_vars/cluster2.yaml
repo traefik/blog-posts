@@ -1,4 +1,5 @@
 keepalived_pass: "tr@3fiK2"
 keepalived_vip: "192.168.1.70/24"
 keepalived_router_id: 43
+keepalived_check: "check_traefik"
 backends: "http://192.168.1.73,http://192.168.1.74,http://192.168.1.75"
