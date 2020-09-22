@@ -58,7 +58,19 @@ upload-image:
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-create-as $(LIBVIRT_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME) $(size) --format qcow2 && \
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-upload --pool $(LIBVIRT_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME) packer/output/debian10
 
-create-vms:
+import-kube-nodes:
+	[ $(CLUSTER) -eq 3 ] && { \
+	cd terraform ; \
+	[ -f cluster2.tfstate ] && ! [ -f cluster3.tfstate ] && { \
+	cp cluster2.tfstate cluster2.tfstate.copy; \
+	for i in 2 3 4 ; do \
+		terraform state mv -state=cluster2.tfstate.copy -state-out=cluster3.tfstate libvirt_domain.vm[$$i] libvirt_domain.vm[$$((i+1))]; \
+	done; \
+	rm -f cluster2.tfstate.copy ; \
+	} \
+	} || echo "not importing"
+
+create-vms: import-kube-nodes
 	cd terraform && terraform init && terraform apply -auto-approve -var "libvirt_uri=$(LIBVIRT_HYPERVISOR_URI)" -var "ssh_key=$(SSH_IDENTITY)" -var-file="cluster$(CLUSTER).tfvars" -state="cluster$(CLUSTER).tfstate"
 
 run-playbook: create-vms
