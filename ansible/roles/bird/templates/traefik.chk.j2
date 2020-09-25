@@ -1,9 +1,9 @@
 [traefik]
-check_cmd         = /usr/bin/curl --fail --silent http://{{anycast_vip}}:8080/
+check_cmd         = /usr/bin/curl --fail --silent http://{{vip}}:8080/
 check_interval    = 10
 check_timeout     = 2
 check_fail        = 2
 check_rise        = 2
 check_disabled    = false
 on_disabled       = withdraw
-ip_prefix         = {{anycast_vip}}/32
+ip_prefix         = {{vip}}/32

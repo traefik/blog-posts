@@ -22,7 +22,7 @@ vrrp_instance VI_traefik {
               auth_pass {{keepalived_pass}}
         }
         virtual_ipaddress {
-              {{keepalived_vip}}
+              {{vip}}
         }
 
 {% if keepalived_check is defined %}
@@ -43,7 +43,7 @@ vrrp_instance VI_traefik {
               auth_pass {{keepalived_pass}}
         }
         virtual_ipaddress {
-              {{keepalived_vip}}
+              {{vip}}
         }
 }
 {% endif %}

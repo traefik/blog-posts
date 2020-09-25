@@ -11,6 +11,7 @@ LIBVIRT_IMAGE_NAME="debian10-traefik.qcow2"
 ROOT_PASSWORD="traefik"
 $(eval SSH_IDENTITY=$(shell find ~/.ssh/ -name 'id_*' -not -name '*.pub' | head -n 1))
 CLUSTER=1
+TRAEFIKEE_LICENSE="N/A"
 
 all:
 
@@ -20,7 +21,7 @@ create-env:
 	test -d $(LOCAL_BIN)|| mkdir -p $(LOCAL_BIN)
 	echo ${PATH} | grep $(LOCAL_BIN) || (echo 'export PATH=$$PATH:~/.local/bin/' >> ~/.bashrc; . ~/.bashrc)
 
-install_packer:
+install-packer:
 	test -f $(LOCAL_BIN)packer || \
 	(wget -q https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_linux_amd64.zip -O /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip; \
 	unzip /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip -d $(LOCAL_BIN); \
@@ -63,7 +64,7 @@ import-kube-nodes:
 	cd terraform ; \
 	[ -f cluster2.tfstate ] && ! [ -f cluster3.tfstate ] && { \
 	cp cluster2.tfstate cluster2.tfstate.copy; \
-	for i in 2 3 4 ; do \
+	for i in 3 4 5 ; do \
 		terraform state mv -state=cluster2.tfstate.copy -state-out=cluster3.tfstate libvirt_domain.vm[$$i] libvirt_domain.vm[$$((i+1))]; \
 	done; \
 	rm -f cluster2.tfstate.copy ; \
@@ -74,4 +75,4 @@ create-vms: import-kube-nodes
 	cd terraform && terraform init && terraform apply -auto-approve -var "libvirt_uri=$(LIBVIRT_HYPERVISOR_URI)" -var "ssh_key=$(SSH_IDENTITY)" -var-file="cluster$(CLUSTER).tfvars" -state="cluster$(CLUSTER).tfstate"
 
 run-playbook: create-vms
-	cd ansible && ansible-playbook -u root -i traefik_inventory site.yml
+	cd ansible && ansible-playbook -u root -i traefik_inventory -e "traefikee_license_key=$(TRAEFIKEE_LICENSE_KEY)" site.yml

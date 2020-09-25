@@ -16,6 +16,20 @@
   tags:
     - fake-service
 
+- hosts: traefikee
+  roles:
+    - role: traefikee
+      when: traefikee_role == "controller"
+  tags:
+    - traefikee
+
+- hosts: traefikee
+  roles:
+    - role: traefikee
+      when: traefikee_role == "proxy"
+  tags:
+    - traefikee
+
 - hosts: keepalived
   roles:
     - role: keepalived

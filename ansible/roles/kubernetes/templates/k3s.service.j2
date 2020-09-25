@@ -21,4 +21,4 @@ Restart=always
 RestartSec=5s
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s {% if role == 'server' %}server --no-deploy traefik --kube-apiserver-arg service-node-port-range=1-65535{% else %}agent {% for node in groups['kubernetes'] %}{% if hostvars[node]['role'] == 'server' %}--server https://{{hostvars[node]['ansible_default_ipv4']['address']}}:6443 --token {{hostvars[node]['token']}}{% endif %}{% endfor %}{% endif %}
+ExecStart=/usr/local/bin/k3s {% if role == 'server' %}server --no-deploy traefik --kube-apiserver-arg service-node-port-range=1-65535 --flannel-backend=host-gw{% else %}agent --server https://{{ (groups['kubernetes'] | map('extract', hostvars)  | selectattr('role', 'equalto', 'server') | map(attribute="ansible_default_ipv4.address") | list)[0] }}:6443 --token {{ (groups['kubernetes'] | map('extract', hostvars)  | selectattr('role', 'equalto', 'server') | map(attribute="token") | list)[0] }}{% endif %}

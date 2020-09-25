@@ -10,23 +10,35 @@ vms = [
     }
   },
   {
-    name = "traefik-lb5"
+    name = "traefik-ctrl2"
     cpu = 1
     memory = 512
     ip = "192.168.1.82"
-    groups = ["bird", "traefik", "cluster3"]
+    groups = ["traefikee", "cluster3"]
+    vars = {
+        traefikee_role = "controller"
+    }
+  },
+  {
+    name = "traefik-lb5"
+    cpu = 1
+    memory = 512
+    ip = "192.168.1.83"
+    groups = ["bird", "traefikee", "cluster3"]
     vars = {
         role = "client"
+        traefikee_role = "proxy"
     }
   },
   {
     name = "traefik-lb6"
     cpu = 1
     memory = 512
-    ip = "192.168.1.83"
-    groups = ["bird", "traefik", "cluster3"]
+    ip = "192.168.1.84"
+    groups = ["bird", "traefikee", "cluster3"]
     vars = {
          role = "client"
+         traefikee_role = "proxy"
     }
   },
   {

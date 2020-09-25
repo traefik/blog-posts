@@ -203,6 +203,8 @@ spec:
           image: traefik:v2.2
           args:
             - --entrypoints.web.Address=:80
+            - --entrypoints.web.proxyProtocol.insecure
+            - --entrypoints.web.forwardedHeaders.insecure
             - --providers.kubernetescrd
             - --api.insecure
             - --api.dashboard
@@ -221,6 +223,7 @@ metadata:
   labels:
     name: traefik
 spec:
+  externalTrafficPolicy: Local
   type: NodePort
   ports:
     - port: 80

@@ -1,0 +1,19 @@
+{
+  "CN": "loadbalancer",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "FR",
+      "L": "EARTH",
+      "emailAddress": "noreply@traefik.io",
+      "OU": "Traefik Labs"
+    }
+  ],
+  "hosts": [
+     "loadbalancer",
+     "{{vip}}"
+  ]
+}

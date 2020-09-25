@@ -1,0 +1,6 @@
+- name: Run traefikee
+  systemd:
+    state: started
+    name: "traefikee-{{traefikee_role}}"
+    daemon_reload: yes
+    enabled: yes
