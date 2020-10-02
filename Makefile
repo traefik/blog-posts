@@ -1,7 +1,7 @@
 LOCAL_BIN=~/.local/bin/
 PACKER_VERSION=1.6.2
 TERRAFORM_PLUGIN_DIR=~/.terraform.d/plugins
-TERRAFORM_VERSION=0.13.2
+TERRAFORM_VERSION=0.13.3
 TERRAFORM_LIBVIRT_VERSION=0.6.2
 TERRAFORM_ANSIBLE_VERSION=2.3.3
 ANSIBLE_VERSION=2.9.13
@@ -23,14 +23,14 @@ create-env:
 
 install-packer:
 	test -f $(LOCAL_BIN)packer || \
-	(wget -q https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_linux_amd64.zip -O /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip; \
+	(curl https://releases.hashicorp.com/packer/$(PACKER_VERSION)/packer_$(PACKER_VERSION)_linux_amd64.zip -o /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip; \
 	unzip /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip -d $(LOCAL_BIN); \
 	rm -f /tmp/packer_$(PACKER_VERSION)_linux_amd64.zip); \
 	chmod +x $(LOCAL_BIN)packer
 
 install-terraform:
 	test -f $(LOCAL_BIN)terraform || \
-	(wget -q https://releases.hashicorp.com/terraform/$(TERRAFORM_VERSION)/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip -O /tmp/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip; \
+	(curl -q https://releases.hashicorp.com/terraform/$(TERRAFORM_VERSION)/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip -o /tmp/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip; \
 	unzip /tmp/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip -d $(LOCAL_BIN); \
 	rm -f /tmp/terraform_$(TERRAFORM_VERSION)_linux_amd64.zip); \
 	chmod +x $(LOCAL_BIN)terraform
@@ -41,9 +41,9 @@ install-ansible:
 install-terraform-plugins:
 	test -d $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/ || mkdir -p $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/; \
 	test -f $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/terraform-provider-libvirt || \
-	(wget https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v$(TERRAFORM_LIBVIRT_VERSION)/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION)+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz -O /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz && tar xfvz /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz -C $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/ && rm -f /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz)
+	(curl https://github.com/dmacvicar/terraform-provider-libvirt/releases/download/v$(TERRAFORM_LIBVIRT_VERSION)/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION)+git.1585292411.8cbe9ad0.Ubuntu_18.04.amd64.tar.gz -o /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz && tar xfvz /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz -C $(TERRAFORM_PLUGIN_DIR)/github.com/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/ && rm -f /tmp/terraform-provider-libvirt-$(TERRAFORM_LIBVIRT_VERSION).tar.gz)
 	test -f $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible || \
-	(wget https://github.com/radekg/terraform-provisioner-ansible/releases/download/v$(TERRAFORM_ANSIBLE_VERSION)/terraform-provisioner-ansible-linux-amd64_v$(TERRAFORM_ANSIBLE_VERSION) -O $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible && chmod +x $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible)
+	(curl https://github.com/radekg/terraform-provisioner-ansible/releases/download/v$(TERRAFORM_ANSIBLE_VERSION)/terraform-provisioner-ansible-linux-amd64_v$(TERRAFORM_ANSIBLE_VERSION) -o $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible && chmod +x $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible)
 
 image: build-image upload-image
 
