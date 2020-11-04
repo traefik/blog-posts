@@ -15,7 +15,22 @@ TRAEFIKEE_LICENSE="N/A"
 
 all:
 
-myenv: create-env install-packer install-terraform install-terraform-plugins install-ansible
+check-env:
+	@(which unzip 2>&1 > /dev/null) || (echo "unzip is not in your PATH" && exit 1)
+	@(which curl 2>&1 > /dev/null) || (echo "curl is not in your PATH" && exit 1)
+	@(which virsh 2>&1 > /dev/null) || (echo "virsh is not in your PATH" && exit 1)
+	@(terraform version 2>&1 | grep -E 'v0.1([4-9].[0-9]|3.[3-9])' > /dev/null) || (echo "terraform is not in your PATH or is not up to date" && exit 1)
+	@(packer version 2>&1 | grep -E 'v1.([7-9].[0-9]|6.[2-9])' > /dev/null) || (echo "packer is not in your PATH or is not up to date" && exit 1)
+	@(ansible --version | head -n 1 | grep -E '(2.9.(1[3-9]|[2-9][0-9])|[3-9].[0-9].[0-9])' > /dev/null) || (echo "packer is not in your PATH or is not up to date" && exit 1)
+	@(which kubectl 2>&1 > /dev/null) || (echo "kubectl is not in your PATH" && exit 1)
+	@$(eval  ANSIBLE_PYTHON_VERSION = $(shell ansible --version | grep 'python version' | awk '{ print $$4 }' | awk -F '.' '{ print $$1 }'))
+	@(which python${ANSIBLE_PYTHON_VERSION} 2>&1 > /dev/null) || (echo "python${ANSIBLE_PYTHON_VERSION} is not in your PATH" && exit 1)
+	@(which pip${ANSIBLE_PYTHON_VERSION} 2>&1 > /dev/null) || (echo "pip${ANSIBLE_PYTHON_VERSION} is not in your PATH" && exit 1)
+	@(pip${ANSIBLE_PYTHON_VERSION} freeze | grep -E 'openshift==0.(1[1-9].[2-9]|[2-9][0-9].[0-9])' > /dev/null) || (echo "openshift>=0.11.2 is not installed as a python${ANSIBLE_PYTHON_VERSION} module" && exit 1)
+	@(pip${ANSIBLE_PYTHON_VERSION} freeze | grep -E 'kubernetes==1[1-9].[0-9].[0-9]' > /dev/null) || (echo "kubernetes>=11.0.0 is not installed as a python${ANSIBLE_PYTHON_VERSION} module" && exit 1)
+	@echo "You're ready to play!"
+
+my-linux-env: create-env install-packer install-terraform install-terraform-plugins install-ansible
 
 create-env:
 	test -d $(LOCAL_BIN)|| mkdir -p $(LOCAL_BIN)
