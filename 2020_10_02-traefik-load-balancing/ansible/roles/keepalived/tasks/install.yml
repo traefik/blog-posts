@@ -1,0 +1,6 @@
+- name: Install keepalived and curl
+  apt:
+    name:
+      - keepalived
+      - curl # curl is useful for keepalived check
+    state: present

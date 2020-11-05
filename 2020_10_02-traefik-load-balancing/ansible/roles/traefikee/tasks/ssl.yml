@@ -1,0 +1,55 @@
+- name: Install cfssl
+  apt:
+    name:
+      - golang-cfssl
+    state: present
+
+- name: Create ssl dir
+  file:
+    path: /etc/ssl/traefikee/
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Copy ssl stuff
+  template:
+    src: "{{item}}.j2"
+    dest: "/etc/ssl/traefikee/{{item}}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - ca-config.json
+    - ca-csr.json
+    - loadbalancer-csr.json
+
+- name: Create the CA
+  shell:
+    cmd: "cfssl gencert -initca ca-csr.json | cfssljson -bare ca"
+    chdir: /etc/ssl/traefikee/
+  args:
+    creates: /etc/ssl/traefikee/ca.pem
+
+- name: Create the cert
+  shell:
+    cmd: "cfssl gencert -ca=ca.pem  -ca-key=ca-key.pem -config=ca-config.json -profile=server loadbalancer-csr.json | cfssljson -bare loadbalancer"
+    chdir: /etc/ssl/traefikee/
+  args:
+    creates: /etc/ssl/traefikee/loadbalancer.pem
+  register: ssl
+
+- name: Install the SSL cert in traefikee
+  shell:
+    cmd: "{{item}}"
+  when: ssl.changed
+  with_items:
+    - (teectl delete tls-cert --id $(teectl get tls-certs | grep loadbalancer | awk '{ print $1 }')) || echo "not existing"
+    - teectl create tls-cert --cert=/etc/ssl/traefikee/loadbalancer.pem --key=/etc/ssl/traefikee/loadbalancer-key.pem
+
+- name: Get CA public key
+  fetch:
+    src: /etc/ssl/traefikee/ca.pem
+    dest: "/tmp/traefikee_{{ansible_hostname}}.pem"
+    flat: yes
+  changed_when: false

@@ -1,0 +1,17 @@
+- name: Create config file
+  template:
+    src: anycast-healthchecker.conf.j2
+    dest: /etc/anycast-healthchecker.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart anycast-healthchecker
+
+- name: Create check file
+  template:
+    src: traefik.conf.j2
+    dest: /etc/anycast-healthchecker.d/traefik.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart anycast-healthchecker

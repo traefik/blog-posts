@@ -1,0 +1,51 @@
+- name: Download and install traefikee
+  unarchive:
+    src: https://s3.amazonaws.com/traefikee/binaries/v{{traefikee_version}}/traefikee_v{{traefikee_version}}_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    exclude:
+      - "docs"
+  args:
+    creates: /usr/local/bin/traefikee
+
+- name: Download and install teectl
+  unarchive:
+    src: https://s3.amazonaws.com/traefikee/binaries/v{{traefikee_version}}/teectl_v{{traefikee_version}}_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    exclude:
+      - "docs"
+  args:
+    creates: /usr/local/bin/teectl
+
+- name: Create traefikee user
+  user:
+    name: traefikee
+    comment: trafikee user
+    system: yes
+    home: /var/lib/traefikee
+    create_home: yes
+    shell: /usr/sbin/nologin
+
+# - name: Set user caps
+#   capabilities:
+#     path:  /usr/local/bin/traefik
+#     capability: cap_net_bind_service=+ep
+#     state: present
+#   changed_when: false
+
+# - name: Create config dir
+#   file:
+#     path: /etc/traefik
+#     owner: root
+#     group: root
+#     mode: '0755'
+#     state: directory
+
+# - name: Create acme dir
+#   file:
+#     path: /etc/traefik/acme
+#     owner: traefik
+#     group: traefik
+#     mode: '0700'
+#     state: directory

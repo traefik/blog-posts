@@ -1,0 +1,11 @@
+- name: Create a the ingress
+  k8s:
+    kubeconfig: /tmp/kubeconfig-k3s
+    resource_definition: "{{ lookup('file', 'traefik.yml') }}"
+    state: present
+
+- name: Create the app
+  k8s:
+    kubeconfig: /tmp/kubeconfig-k3s
+    resource_definition: "{{ lookup('file', 'whoami.yml') }}"
+    state: present

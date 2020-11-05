@@ -1,0 +1,64 @@
+# Configure logging
+log syslog { debug, trace, info, remote, warning, error, auth, fatal, bug };
+log stderr all;
+
+# for anycast-healthchecker
+include "/etc/bird.d/*.conf";
+
+# Override router ID
+router id {{ansible_default_ipv4.address}};
+
+# do not import static routes for RR into the kernel
+filter import_kernel {
+  if source = RTS_STATIC then reject;
+  if ( net != 0.0.0.0/0 ) then {
+     accept;
+  }
+  reject;
+}
+
+# and do RR static routes also
+filter export_kernel {
+  if source = RTS_STATIC then reject;
+  if ( net != 0.0.0.0/0 ) then {
+    accept;
+  }
+}
+
+# Turn on global debugging of all protocols
+debug protocols all;
+
+# This pseudo-protocol watches all interface up/down events.
+protocol device {
+  scan time 2;    # Scan interfaces every 2 seconds
+}
+
+protocol kernel {
+  import filter import_kernel;
+  export filter export_kernel;
+}
+
+protocol direct direct1 {
+  interface "lo";
+  debug off;
+  export none;
+  import all;
+}
+
+template bgp company_router {
+  local as {{local_as}};
+  direct;
+  graceful restart;
+  import none;
+  export where anycast_vip();
+}
+
+{% for host in groups['bird'] %}
+{% if hostvars[host]['role'] == 'router' %}
+protocol bgp {{hostvars[host]['ansible_hostname']|replace('-', '_')}} from company_router {
+  description "{{hostvars[host]['ansible_hostname']}}@{{hostvars[host]['ansible_default_ipv4']['address']}}";
+  neighbor {{hostvars[host]['ansible_default_ipv4']['address']}} as {{local_as}};
+}
+
+{% endif %}
+{% endfor %}

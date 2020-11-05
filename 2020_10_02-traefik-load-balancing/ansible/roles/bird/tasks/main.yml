@@ -1,0 +1,11 @@
+- include_tasks: install.yml
+- include_tasks: "sysctl_{{role}}.yml"
+- include_tasks: install_client.yml
+  when: role == "client"
+- include_tasks: vipinterface.yml
+  when: role == "client"
+- include_tasks: config.yml
+- include_tasks: config_client.yml
+  when: role == "client"
+- include_tasks: service_client.yml
+  when: role == "client"

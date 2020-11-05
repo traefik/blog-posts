@@ -1,0 +1,4 @@
+traefikee_version: 2.2.2
+traefikee_license_key: "N/A"
+traefikee_controller_port: 4242
+backends: ""

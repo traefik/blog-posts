@@ -1,0 +1,7 @@
+- include_tasks: install.yml
+- meta: flush_handlers
+- include_tasks: token.yml
+  when: role == "server"
+- include_tasks: service.yml
+- include_tasks: kubeconfig.yml
+  when: role == "server"

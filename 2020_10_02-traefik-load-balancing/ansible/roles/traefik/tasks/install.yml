@@ -1,0 +1,49 @@
+- name: Download and install traefik
+  unarchive:
+    src: https://github.com/traefik/traefik/releases/download/v{{traefik_version}}/traefik_v{{traefik_version}}_linux_amd64.tar.gz
+    dest: /usr/local/bin
+    remote_src: yes
+    exclude:
+      - "*.md"
+  args:
+    creates: /usr/local/bin/traefik
+
+- name: Create traefik user
+  user:
+    name: traefik
+    comment: trafik user
+    system: yes
+    home: /var/www
+    shell: /usr/sbin/nologin
+
+- name: Set user caps
+  capabilities:
+    path:  /usr/local/bin/traefik
+    capability: cap_net_bind_service=+ep
+    state: present
+  changed_when: false
+
+- name: Create config dir
+  file:
+    path: /etc/traefik
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Create acme dir
+  file:
+    path: /etc/traefik/acme
+    owner: traefik
+    group: traefik
+    mode: '0700'
+    state: directory
+
+- name: Install systemd unit file
+  template:
+    src: traefik.service.j2
+    dest: /etc/systemd/system/traefik.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart traefik

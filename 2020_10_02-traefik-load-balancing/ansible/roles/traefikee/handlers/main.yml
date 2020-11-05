@@ -1,0 +1,13 @@
+- name: Restart traefikee
+  systemd:
+    name: "traefikee-{{traefikee_role}}"
+    state: restarted
+    daemon_reload: yes
+
+- name: Apply config
+  shell:
+    cmd: "{{item}}"
+  run_once: true
+  with_items:
+      - "teectl apply --socket=/var/run/traefikee/teectl.sock --file=/etc/traefikee/traefik.toml"
+      - "teectl apply --socket=/var/run/traefikee/teectl.sock --file=/etc/traefikee/dynamic_conf.toml"

@@ -1,0 +1,21 @@
+[log]
+  level = "INFO"
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+    [entryPoints.web.proxyProtocol]
+      insecure = true
+    [entryPoints.web.forwardedHeaders]
+      insecure = true
+
+  [entryPoints.websecure]
+    address = ":443"
+    [entryPoints.websecure.proxyProtocol]
+      insecure = true
+    [entryPoints.websecure.forwardedHeaders]
+      insecure = true
+
+[api]
+  insecure = true
+  dashboard = true

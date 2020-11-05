@@ -1,0 +1,25 @@
+- name: Install environment file
+  template:
+    src: traefikee-controller.j2
+    dest: /etc/default/traefikee-controller
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart traefikee
+
+- name: Install systemd unit file
+  template:
+    src: traefikee-controller.service.j2
+    dest: /etc/systemd/system/traefikee-controller.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart traefikee
+
+- name: Create config dir
+  file:
+    path: /etc/traefikee
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory

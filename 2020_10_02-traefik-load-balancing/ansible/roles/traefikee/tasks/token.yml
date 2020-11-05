@@ -1,0 +1,12 @@
+- name: Wait until the cluster boostrap is ok
+  wait_for:
+    path:  /var/lib/traefikee/tokens/proxy
+    timeout: 30
+
+- name: Get proxy token
+  shell: cat /var/lib/traefikee/tokens/proxy
+  changed_when: false
+  register: tokencmd
+
+- set_fact:
+    token: "{{tokencmd.stdout}}"

@@ -1,0 +1,22 @@
+[Unit]
+Description=Traefik Enterprise Controller
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+EnvironmentFile=-/etc/default/traefikee-controller
+Restart=on-abnormal
+User=traefikee
+Group=traefikee
+ExecStart=/usr/local/bin/traefikee controller --advertise=${CONTROLLER_BIND_ADDRESS} --license=${TEE_LICENSE_KEY} --api.socket=/var/run/traefikee/teectl.sock --socket=/var/run/traefikee/cluster.sock --statedir=/var/lib/traefikee/data --jointoken.file.path=/var/lib/traefikee/tokens
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/traefikee
+PermissionsStartOnly=true
+NoNewPrivileges=true
+RuntimeDirectory=traefikee
+
+[Install]
+WantedBy=multi-user.target

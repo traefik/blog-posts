@@ -1,0 +1,8 @@
+- name: Configure bird
+  template:
+    src: "bird.conf-{{role}}.j2"
+    dest: /etc/bird/bird.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart bird

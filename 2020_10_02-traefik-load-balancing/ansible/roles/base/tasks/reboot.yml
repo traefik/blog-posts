@@ -1,0 +1,12 @@
+- name: Attempting reboot
+  shell: reboot
+  async: 60
+  poll: 0
+
+- set_fact:
+    ansible_host: "{{host_ip}}"
+
+- name: Waiting for resurection
+  wait_for_connection:
+    delay: 60
+    timeout: 300
