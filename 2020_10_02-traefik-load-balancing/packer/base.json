@@ -8,9 +8,14 @@
     {
       "accelerator": "kvm",
       "boot_command": [
-        "<down><down><enter><down><down><down><down><down><down><tab> preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian10.txt auto-install/enable=true DEBCONF_DEBUG=5<enter><wait>"
+        "<down><down><enter><down><down><down><down><down><down><tab>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian10.txt.password ",
+        "auto-install/enable=true ",
+        "DEBCONF_DEBUG=5",
+        "<enter>"
       ],
-      "boot_wait": "5s",
+      "boot_wait": "2s",
+      "boot_key_interval": "10ms",
       "disk_interface": "virtio",
       "disk_size": "30720M",
       "format": "qcow2",

@@ -10,7 +10,7 @@
   tags:
     - traefik
 
-- hosts: fake-service
+- hosts: fakeservice
   roles:
     - role: fake-service
   tags:
@@ -50,10 +50,10 @@
   tags:
     - kubernetes
 
-- hosts: localhost
+- hosts: kubernetes
   roles:
     - role: kubernetes-config
-      when: groups['kubernetes']|length > 0
+      when: role == "server"
   tags:
     - kubernetes-config
 
