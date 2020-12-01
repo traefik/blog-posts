@@ -22,7 +22,7 @@ $(eval SSH_IDENTITY=$(shell find ~/.ssh/ -name 'id_*' -not -name '*.pub' | head 
 help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-all: my-linux-env image run-playbook ## Do everything.
+all:
 
 check-env: ## Check environment.
 	@(which unzip 2>&1 > /dev/null) || (echo "unzip is not in your PATH" && exit 1)
@@ -55,7 +55,7 @@ install-terraform: ## Install Terraform.
 	chmod +x $(LOCAL_BIN)terraform
 
 install-ansible: ## Install Ansible with pip.
-	pip3 freeze | grep ansible==$(ANSIBLE_VERSION) || pip3 install ansible kubernetes openshift
+	pip3 freeze | grep ansible==$(ANSIBLE_VERSION) || pip3 install ansible
 
 install-terraform-plugins: ## Install Terraform libvirt plugin and Terraform Ansible provisioner.
 	test -d $(TERRAFORM_PLUGIN_DIR)/registry.terraform.io/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/ || mkdir -p $(TERRAFORM_PLUGIN_DIR)/registry.terraform.io/dmacvicar/libvirt/$(TERRAFORM_LIBVIRT_VERSION)/linux_amd64/; \

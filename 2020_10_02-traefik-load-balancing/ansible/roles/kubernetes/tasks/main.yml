@@ -1,5 +1,5 @@
 - include_tasks: install.yml
-- include_tasks: install_ansible.yml
+- include_tasks: install_ansible_requirements.yml
   when: role == "server"
 - meta: flush_handlers
 - include_tasks: token.yml
