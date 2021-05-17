@@ -1,0 +1,12 @@
+- name: Install python setuptools and pip
+  apt:
+    name:
+      - python3-setuptools
+      - python3-pip
+
+- name: Install python packages for ansible management
+  pip:
+    name: "{{item}}"
+  loop:
+    - "kubernetes=={{python_kubernetes_version}}"
+    - "openshift=={{python_openshift_version}}"

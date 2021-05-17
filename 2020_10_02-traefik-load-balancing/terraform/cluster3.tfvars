@@ -1,74 +1,86 @@
 vms = [
   {
-    name = "router-1"
-    cpu = 1
+    name   = "router-1"
+    cpu    = 1
     memory = 512
-    ip = "192.168.1.81"
+    ip     = 81
     groups = ["bird", "cluster3"]
     vars = {
-        role = "router"
+      role = "router"
     }
   },
   {
-    name = "traefik-ctrl2"
-    cpu = 1
+    name   = "traefik-ctrl2"
+    cpu    = 1
     memory = 512
-    ip = "192.168.1.82"
+    ip     = 82
     groups = ["traefikee", "cluster3"]
     vars = {
-        traefikee_role = "controller"
+      traefikee_role = "controller"
     }
   },
   {
-    name = "traefik-lb5"
-    cpu = 1
+    name   = "traefik-lb5"
+    cpu    = 1
     memory = 512
-    ip = "192.168.1.83"
+    ip     = 83
     groups = ["bird", "traefikee", "cluster3"]
     vars = {
-        role = "client"
-        traefikee_role = "proxy"
+      role           = "client"
+      traefikee_role = "proxy"
     }
   },
   {
-    name = "traefik-lb6"
-    cpu = 1
+    name   = "traefik-lb6"
+    cpu    = 1
     memory = 512
-    ip = "192.168.1.84"
+    ip     = 84
     groups = ["bird", "traefikee", "cluster3"]
     vars = {
-         role = "client"
-         traefikee_role = "proxy"
+      role           = "client"
+      traefikee_role = "proxy"
     }
   },
   {
-    name = "kube-node1"
-    cpu = 1
+    name   = "kube-node1"
+    cpu    = 1
     memory = 1024
-    ip = "192.168.1.73"
+    ip     = 73
     groups = ["kubernetes"]
     vars = {
-        role = "server"
+      role = "server"
     }
   },
   {
-    name = "kube-node2"
-    cpu = 1
+    name   = "kube-node2"
+    cpu    = 1
     memory = 1024
-    ip = "192.168.1.74"
+    ip     = 74
     groups = ["kubernetes"]
     vars = {
-        role = "agent"
+      role = "agent"
     }
-   },
-   {
-    name = "kube-node3"
-    cpu = 1
+  },
+  {
+    name   = "kube-node3"
+    cpu    = 1
     memory = 1024
-    ip = "192.168.1.75"
+    ip     = 75
     groups = ["kubernetes"]
     vars = {
-        role = "agent"
+      role = "agent"
     }
+  }
+]
+cluster = 3
+vip     = 80
+backends = [
+  {
+    ip   = "75"
+    port = 80
+  },
+  {
+    ip   = "76"
+    port = 80
   }
 ]

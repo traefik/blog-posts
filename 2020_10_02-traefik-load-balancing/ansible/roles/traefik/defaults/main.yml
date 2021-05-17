@@ -1,2 +1,2 @@
-traefik_version: 2.2.11
+traefik_version: 2.3.4
 backends: ""
