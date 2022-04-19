@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   traefik:
-    image: "traefik:v2.0.1"
+    image: "traefik:v2.6"
     command:
       - --entrypoints.web.address=:80
       - --providers.docker
@@ -12,4 +12,4 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   my-app:
-    image: containous/whoami:v1.3.0
+    image: traefik/whoami:v1.7.1
