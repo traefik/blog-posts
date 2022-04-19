@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   traefik:
-    image: "traefik:v2.0.0"
+    image: "traefik:v2.6"
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
@@ -29,7 +29,7 @@ services:
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   my-app:
-    image: containous/whoami:v1.3.0
+    image: traefik/whoami:v1.7.1
     labels:
       - "traefik.http.routers.my-app.rule=Host(`whoami.docker.localhost`)"
       - "traefik.http.routers.my-app.middlewares=auth"

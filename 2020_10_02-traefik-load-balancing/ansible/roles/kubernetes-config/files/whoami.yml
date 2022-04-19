@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: whoami-container
-        image: containous/whoami
+        image: traefik/whoami:v2.7.1
 
 ---
 apiVersion: v1
