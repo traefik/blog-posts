@@ -1,0 +1,3 @@
+CONTROLLER_PEERS="{{ groups['traefikee'] | map('extract', hostvars)  | selectattr('traefikee_role', 'equalto', 'controller') | map(attribute="ansible_default_ipv4.address") | map('regex_replace', '^(.*)$', '\\1:'+traefikee_controller_port|string) | join(',') }}"
+PROXY_NODE_TOKEN="{{ (groups['traefikee'] | map('extract', hostvars)  | selectattr('traefikee_role', 'equalto', 'controller') | map(attribute="token") | list)[0] }}"
+HOSTNAME="{{ansible_hostname}}"

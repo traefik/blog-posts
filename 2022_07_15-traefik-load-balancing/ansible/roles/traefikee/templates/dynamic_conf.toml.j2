@@ -1,0 +1,27 @@
+[http.routers]
+   [http.routers.router]
+        rule = "Path(`/`)"
+        service = "service"
+        middlewares = ["LBratelimit"]
+    [http.routers.routerTLS]
+        rule = "Path(`/`)"
+        service = "service"
+        middlewares = ["LBratelimit"]
+    [http.routers.routerTLS.tls]
+
+[http.services]
+    [http.services.service.loadBalancer]
+        [http.services.service.loadBalancer.healthCheck]
+            path = "/"
+            interval = "10s"
+            timeout = "3s"
+
+{% for backend in backends.split(',') %}
+        [[http.services.service.loadBalancer.servers]]
+            url = "{{backend}}"
+{% endfor %}
+
+[http.middlewares]
+    [http.middlewares.LBratelimit.plugin.rateLimit]
+        average = 10
+        burst = 10

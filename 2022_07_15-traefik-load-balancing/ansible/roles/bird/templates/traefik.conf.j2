@@ -1,0 +1,9 @@
+[traefik]
+check_cmd         = /usr/bin/curl --fail --silent http://{{vip | ipaddr('address')}}:8080/ -t 1
+check_interval    = 2
+check_timeout     = 1
+check_fail        = 2
+check_rise        = 2
+check_disabled    = false
+on_disabled       = withdraw
+ip_prefix         = {{vip | ipaddr('address')}}/32

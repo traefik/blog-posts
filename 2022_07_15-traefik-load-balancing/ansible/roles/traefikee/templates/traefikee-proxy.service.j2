@@ -1,0 +1,24 @@
+[Unit]
+Description=Traefik Enterprise proxy
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+EnvironmentFile=-/etc/default/traefikee-proxy
+Restart=on-abnormal
+User=traefikee
+Group=traefikee
+ExecStart=/usr/local/bin/traefikee proxy --jointoken.value=${PROXY_NODE_TOKEN} --discovery.static.peers=${CONTROLLER_PEERS} --statedir=/var/lib/traefikee/data
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/traefikee
+
+; The following additional security directives only work with systemd v229 or later.
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

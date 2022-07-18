@@ -1,0 +1,13 @@
+- name: Configure /etc/network/interfaces
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reboot
+
+- name: Configure hostname
+  hostname:
+    name: "{{host_name}}"
+  notify: Reboot

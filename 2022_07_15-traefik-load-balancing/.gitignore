@@ -1,0 +1,9 @@
+ansible/traefik_inventory
+ansible/group_vars/*.yaml
+packer/output/
+packer/preseed/debian10.txt.password
+packer/packer_cache/
+packer_cache/
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*

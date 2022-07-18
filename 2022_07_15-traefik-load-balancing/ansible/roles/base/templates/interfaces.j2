@@ -1,0 +1,18 @@
+# MANAGED BY ANSIBLE
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto {{ansible_default_ipv4['interface']}}
+iface {{ansible_default_ipv4['interface']}} inet static
+	address {{host_ip}}
+	netmask {{mask}}
+	gateway {{gateway}}
+	# dns-* options are implemented by the resolvconf package, if installed
+	dns-nameservers {{nameserver}}
+	dns-search traefik.local
+	dns-domain traefik.local

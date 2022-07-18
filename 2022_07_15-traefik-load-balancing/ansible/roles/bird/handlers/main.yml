@@ -1,0 +1,15 @@
+- name: Restart bird
+  systemd:
+    name: bird
+    state: restarted
+
+- name: Restart networking
+  systemd:
+    name: networking
+    state: restarted
+
+- name: Restart anycast-healthchecker
+  systemd:
+    name: anycast-healthchecker
+    state: restarted
+    daemon_reload: yes

@@ -1,0 +1,20 @@
+- name: Create the custom resource definitions
+  k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    resource_definition: "{{ lookup('file', 'crds.yml') }}"
+    state: present
+  run_once: true
+
+- name: Create the ingress controller
+  k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    resource_definition: "{{ lookup('file', 'traefik.yml') }}"
+    state: present
+  run_once: true
+
+- name: Create the app
+  k8s:
+    kubeconfig: /etc/rancher/k3s/k3s.yaml
+    resource_definition: "{{ lookup('file', 'whoami.yml') }}"
+    state: present
+  run_once: true

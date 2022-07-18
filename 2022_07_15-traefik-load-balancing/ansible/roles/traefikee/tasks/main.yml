@@ -1,0 +1,22 @@
+- fail:
+    msg: "No license key provided, please ask for a trial !"
+  when: traefikee_license_key == 'N/A'
+
+- include_tasks: install.yml
+- include_tasks: "install_{{traefikee_role}}.yml"
+  when: traefikee_role == 'controller'
+- meta: flush_handlers
+- include_tasks: token.yml
+  when: traefikee_role == 'controller'
+
+- include_tasks: "install_{{traefikee_role}}.yml"
+  when: traefikee_role == 'proxy'
+
+- include_tasks: ssl.yml
+  when: traefikee_role == 'controller'
+
+- include_tasks: config.yml
+  when: traefikee_role == 'controller'
+  run_once: true
+
+- include_tasks: service.yml

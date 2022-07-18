@@ -1,0 +1,24 @@
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type={{role}}
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s {% if role == 'server' %}server --no-deploy traefik --kube-apiserver-arg service-node-port-range=1-65535 --flannel-backend=host-gw{% else %}agent --server https://{{ (groups['kubernetes'] | map('extract', hostvars)  | selectattr('role', 'equalto', 'server') | map(attribute="ansible_default_ipv4.address") | list)[0] }}:6443 --token {{ (groups['kubernetes'] | map('extract', hostvars)  | selectattr('role', 'equalto', 'server') | map(attribute="token") | list)[0] }}{% endif %}

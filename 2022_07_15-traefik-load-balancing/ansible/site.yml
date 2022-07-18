@@ -1,0 +1,72 @@
+- hosts: all
+  roles:
+    - role: base
+  tags:
+    - base
+
+- hosts: traefik
+  roles:
+    - role: traefik
+  tags:
+    - traefik
+
+- hosts: fakeservice
+  roles:
+    - role: fake-service
+  tags:
+    - fake-service
+
+- hosts: traefikee
+  roles:
+    - role: traefikee
+      when: traefikee_role == "controller"
+  tags:
+    - traefikee
+
+- hosts: traefikee
+  roles:
+    - role: traefikee
+      when: traefikee_role == "proxy"
+  tags:
+    - traefikee
+
+- hosts: keepalived
+  roles:
+    - role: keepalived
+  tags:
+    - keepalived
+
+- hosts: kubernetes
+  roles:
+    - role: kubernetes
+      when: role == "server"
+  tags:
+    - kubernetes
+
+- hosts: kubernetes
+  roles:
+    - role: kubernetes
+      when: role == "agent"
+  tags:
+    - kubernetes
+
+- hosts: kubernetes
+  roles:
+    - role: kubernetes-config
+      when: role == "server"
+  tags:
+    - kubernetes-config
+
+- hosts: bird
+  roles:
+    - role: bird
+      when: role == "router"
+  tags:
+    - bird
+
+- hosts: bird
+  roles:
+    - role: bird
+      when: role != "router"
+  tags:
+    - bird

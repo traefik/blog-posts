@@ -1,0 +1,6 @@
+- name: Run traefik
+  systemd:
+    state: started
+    name: traefik
+    daemon_reload: yes
+    enabled: yes

@@ -1,0 +1,4 @@
+auto lo:traefik
+iface lo:traefik inet static
+    address {{vip | ipaddr('address')}}
+    netmask 255.255.255.255
