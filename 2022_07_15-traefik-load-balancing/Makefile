@@ -67,6 +67,7 @@ install-terraform-plugins:
 qemu-user:
 	sed -i 's/\#user = \"root\"/user = \"root\"/g' /etc/libvirt/qemu.conf
 	sed -i 's/\#group = \"root\"/group = \"root\"/g' /etc/libvirt/qemu.conf
+	sed -i 's/\#security_driver = \"selinux\"/security_driver = \"none\"/g' /etc/libvirt/qemu.conf
 	systemctl restart libvirtd
 
 image: build-image upload-image ## Build image with Packer and upload it to libvirt with virsh.
