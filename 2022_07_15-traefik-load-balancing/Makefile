@@ -83,7 +83,7 @@ upload-image: ## Upload image to libvirt with virsh.
 	test -d $(LIBVIRT_TEMPLATES_IMAGES_POOL_DIR) || mkdir $(LIBVIRT_TEMPLATES_IMAGES_POOL_DIR)
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) pool-create-as $(LIBVIRT_TEMPLATES_IMAGES_POOL) dir --target $(LIBVIRT_TEMPLATES_IMAGES_POOL_DIR) 2>/dev/null || echo "did not create pool"
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) pool-start $(LIBVIRT_TEMPLATES_IMAGES_POOL) 2>/dev/null || echo "did not enable pool"
-	test -f $(LIBVIRT_TEMPLATES_IMAGES_POOL_DIR)/$(LIBVIRT_IMAGE_NAME) || virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-list $(LIBVIRT_TEMPLATES_IMAGES_POOL) | grep $(LIBVIRT_IMAGE_NAME) && virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-delete --pool $(LIBVIRT_TEMPLATES_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME)
+	test ! -f $(LIBVIRT_TEMPLATES_IMAGES_POOL_DIR)/$(LIBVIRT_IMAGE_NAME) || virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-list $(LIBVIRT_TEMPLATES_IMAGES_POOL) | grep $(LIBVIRT_IMAGE_NAME) && virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-delete --pool $(LIBVIRT_TEMPLATES_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME)
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-create-as $(LIBVIRT_TEMPLATES_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME) $(size) --format qcow2 && \
 	virsh -c $(LIBVIRT_HYPERVISOR_URI) vol-upload --pool $(LIBVIRT_TEMPLATES_IMAGES_POOL) $(LIBVIRT_IMAGE_NAME) packer/output/debian11
 
