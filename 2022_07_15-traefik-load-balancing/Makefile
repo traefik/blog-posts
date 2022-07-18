@@ -64,7 +64,7 @@ install-terraform-plugins:
 	test -f $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible || \
 	(curl -L https://github.com/radekg/terraform-provisioner-ansible/releases/download/v$(TERRAFORM_ANSIBLE_VERSION)/terraform-provisioner-ansible-linux-amd64_v$(TERRAFORM_ANSIBLE_VERSION) -o $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible && chmod +x $(TERRAFORM_PLUGIN_DIR)/terraform-provisioner-ansible)
 
-qemu-user:
+qemu-security:
 	sed -i 's/\#user = \"root\"/user = \"root\"/g' /etc/libvirt/qemu.conf
 	sed -i 's/\#group = \"root\"/group = \"root\"/g' /etc/libvirt/qemu.conf
 	sed -i 's/\#security_driver = \"selinux\"/security_driver = \"none\"/g' /etc/libvirt/qemu.conf
